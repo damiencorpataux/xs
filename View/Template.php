@@ -48,7 +48,7 @@ class Template {
         // FIXME: the correct tpl block end tag should be smartly guessed
         $s = preg_replace_callback('/<tpl for="(.+?)">(.+?)<\/tpl>/s', array($this, "_applyfor"), $s);
         // if blocks
-        $s = preg_replace_callback('/(\s*)<tpl if="(.+?)">(.+?)<\/tpl>/s', array($this, "_applyif"), $s);
+        $s = preg_replace_callback('/<tpl if="(.+?)">(.+?)<\/tpl>/s', array($this, "_applyif"), $s);
         // variables
         $s = preg_replace_callback('/{([^\s{}]+?)}/', array($this, "_applyvar"), $s);
         // processes compiled template
@@ -87,9 +87,8 @@ class Template {
         return "<?php if (isset({$phpvar})) print {$phpvar} ?>";
     }
     function _applyif($matches) {
-        $indent = $matches[1];
-        $cond = $matches[2];
-        $content = $matches[3];
+        $cond = $matches[1];
+        $content = $matches[2];
         $phpcond = preg_replace_callback('/[a-zA-Z#]{1}[\.\w]*/', array($this, '_convert'), $cond);
         return "<?php if ({$phpcond}) { ?>{$content}<?php } ?>";
     }
